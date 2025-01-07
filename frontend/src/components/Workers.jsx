@@ -7,7 +7,7 @@ function Workers() {
 
 	const fetchAPI = async () => {
 		axios
-			.get("http://127.0.0.1:3000/api")
+			.get("/api")
 			.then((users) => setUsers(users.data))
 			.catch((err) => console.log(err));
 	};
