@@ -1,27 +1,23 @@
 const express = require('express');
 const path = require('path'); // Dodaj ten import
 const app = express();
-// const cors = require('cors')
+const cors = require('cors')
 const corsOptions = {
-    origin: ['*'],
+    origin: ['localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
 }
+app.use(cors(corsOptions));
 const frontendPath = path.resolve(__dirname, '../frontend/dist');
 //db
 const mongoose = require('mongoose');
 const UserModel = require('./models/Users');
 
-// app.use(cors(corsOptions));
 app.use(express.json())
 app.use(express.static(path.join(frontendPath)));
 
 mongoose.connect('mongodb://127.0.0.1:27017/project')
-
-app.get('/api2', (req, res) => {
-    res.json({ robole: ['mati', 'ukrainiec'] })
-});
 
 app.get('/api', (req, res) => {
     UserModel.find()

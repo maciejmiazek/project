@@ -16,6 +16,12 @@ function Workers() {
 		fetchAPI();
 	}, []);
 
+	function minutesToTime(minutes) {
+		const hours = Math.floor(minutes / 60);
+		const mins = minutes % 60;
+		return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+	}
+
 	return (
 		<div className='workers'>
 			
@@ -23,8 +29,10 @@ function Workers() {
 				return (
 				<div key={i} className='card-board'>
 					<p>{item.name}</p>
-					<p>{item.email}</p>
-					<p>{item.age}</p>
+					<p>{`${minutesToTime(item.startWorkTime)} - ${minutesToTime(item.endWorkTime)}`}</p>
+					<p>{item.phone}</p>
+					<p>{`${item.salary} PLN`}</p>
+					<p>{item.machine}</p>
 				</div>)
 			})}
 			
