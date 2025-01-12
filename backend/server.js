@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path'); // Dodaj ten import
 const app = express();
@@ -17,7 +18,10 @@ const UserModel = require('./models/Users');
 app.use(express.json())
 app.use(express.static(path.join(frontendPath)));
 
-mongoose.connect('mongodb://127.0.0.1:27017/project')
+const db_host = process.env.DB_HOST
+const db_user = process.env.DB_USER
+const db_pass = process.env.DB_PASS
+mongoose.connect(`mongodb+srv://${db_user}:${db_pass}@cluster0.${db_host}/project`)
 
 app.get('/api', (req, res) => {
     UserModel.find()
@@ -30,7 +34,7 @@ app.get('*', (req, res) => {
 });
 
 // Uruchom serwer
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Serwer działa na porcie ${PORT}`);
 });
