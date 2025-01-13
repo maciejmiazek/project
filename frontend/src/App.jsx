@@ -3,13 +3,13 @@ import Sidebar from "./components/Sidebar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import "./App.css";
+import Planning from "./components/Planning";
 import Workers from "./components/Workers";
 import NoPage from "./components/NoPage";
 
-const Planowanie = () => <h2>Strona Planowanie</h2>;
-const Maszyny = () => <h2>Strona Maszyny</h2>;
-const Magazyn = () => <h2>Strona Magazyn</h2>;
-const Finanse = () => <h2>Strona Finanse</h2>;
+const Maszyny = () => <h2>Maszyny</h2>;
+const Magazyn = () => <h2>Magazyn</h2>;
+const Finanse = () => <h2>Finanse</h2>;
 
 function App() {
 	return (
@@ -19,11 +19,11 @@ function App() {
 				<Routes>
 					<Route
 						path='/'
-						element={<Planowanie />}
+						element={<Planning />}
 					/>
 					<Route
 						path='/planowanie'
-						element={<Planowanie />}
+						element={<Planning />}
 					/>
 					<Route
 						path='/pracownicy'

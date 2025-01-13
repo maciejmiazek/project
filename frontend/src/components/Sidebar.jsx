@@ -1,9 +1,17 @@
 import React from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, NavLink } from "react-router-dom";
 import "./Sidebar.css";
 import "@fontsource/poppins";
 import "@fontsource/poppins/600.css";
-import { IconUser } from '@tabler/icons-react';
+import {
+	IconUser,
+	IconLayoutDashboardFilled,
+	IconUsers,
+	IconTool,
+	IconBuildingWarehouse,
+	IconFileDollar,
+	IconLogout,
+} from "@tabler/icons-react";
 
 function Sidebar() {
 	return (
@@ -13,46 +21,63 @@ function Sidebar() {
 					<div className='logo'>
 						<IconUser stroke={2} />
 					</div>
-					<div className="name">Maciej</div>
+					<div className='name'>Maciej</div>
 				</div>
 				<nav className='nav-menu'>
-					<Link to='/planowanie'>
+					<NavLink
+						to='/planowanie'
+						className={({ isActive }) => (isActive ? "active" : "")}
+					>
 						<button className='nav-item'>
-							
+							<IconLayoutDashboardFilled />
 							Planowanie
 						</button>
-					</Link>
-					<Link to='/pracownicy'>
+					</NavLink>
+					<NavLink
+						to='/pracownicy'
+						className={({ isActive }) => (isActive ? "active" : "")}
+					>
 						<button className='nav-item'>
-							
+							<IconUsers stroke={2.5} />
 							Pracownicy
 						</button>
-					</Link>
-					<Link to='/maszyny'>
+					</NavLink>
+					<NavLink
+						to='/maszyny'
+						className={({ isActive }) => (isActive ? "active" : "")}
+					>
 						<button className='nav-item'>
-						
+							<IconTool stroke={2} />
 							Maszyny
 						</button>
-					</Link>
-					<Link to='/magazyn'>
+					</NavLink>
+					<NavLink
+						to='/magazyn'
+						className={({ isActive }) => (isActive ? "active" : "")}
+					>
 						<button className='nav-item'>
-							
+							<IconBuildingWarehouse stroke={2} />
 							Magazyn
 						</button>
-					</Link>
-					<Link to='/finanse'>
+					</NavLink>
+					<NavLink
+						to='/finanse'
+						className={({ isActive }) => (isActive ? "active" : "")}
+					>
 						<button className='nav-item'>
-							
+							<IconFileDollar stroke={2} />
 							Finanse
 						</button>
-					</Link>
-					<Link to='/wyloguj'>
-						<button className='nav-item'>
-							
-							Wyloguj
-						</button>
-					</Link>
+					</NavLink>
 				</nav>
+			</div>
+			<div className='logout'>
+				<Link to='/wyloguj'>
+					<button className='nav-item'>
+						<IconLogout stroke={2} />
+						Wyloguj
+					</button>
+				</Link>
 			</div>
 		</div>
 	);
