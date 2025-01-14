@@ -29,6 +29,10 @@ app.get('/api', (req, res) => {
     .catch(err => res.json(err))
 });
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+});
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
