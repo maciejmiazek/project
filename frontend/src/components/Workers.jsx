@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from "react";
+import WorkersPanel from "./WorkersPanel";
 import "./Workers.css";
 import axios from "axios";
 import {
@@ -25,28 +26,36 @@ function Workers() {
 		return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
 	}
 
+	const buttonStyle = {
+		backgroundColor: 'red',
+	};
+
 	return (
 		<div className='workers'>
-
-			{users.map((item, i) => {
-				return (
-				<div key={i} className='card-board'>
-					<div className="worker-avatar">
-						<div className="status-box">Aktywny</div>
-						<div className="circle">
-							<IconUser stroke={2} />
+			<div className='workers-main'>
+				{users.map((item, i) => {
+					return (
+					<div key={i} className='card-board'>
+						<div className="worker-avatar">
+							<div className="status-box">Aktywny</div>
+							<div className="circle">
+								<IconUser stroke={2} />
+							</div>
+							<p>{item.name}</p>
 						</div>
-						<p>{item.name}</p>
-					</div>
-					<div className="worker-items">
-						<div className="item-option"><p>Czas Pracy</p><p>{`${minutesToTime(item.startWorkTime)} - ${minutesToTime(item.endWorkTime)}`}</p></div>
-						<div className="item-option"><p>Pensja</p><p>{`${item.salary} PLN`}</p></div>
-						<div className="item-option"><p>Telefon</p><p>{item.phone}</p></div>
-						<div className="item-option"><p>Przydzielona Maszyna</p><p>{item.machine}</p></div>
-					</div>
-				</div>)
-			})}
-			
+						<div className="worker-items">
+							<div className="item-option"><p>Czas Pracy</p><p>{`${minutesToTime(item.startWorkTime)} - ${minutesToTime(item.endWorkTime)}`}</p></div>
+							<div className="item-option"><p>Pensja</p><p>{`${item.salary} PLN`}</p></div>
+							<div className="item-option"><p>Telefon</p><p>{item.phone}</p></div>
+							<div className="item-option"><p>Przydzielona Maszyna</p><p>{item.machine}</p></div>
+							<button className="delete-option" style={buttonStyle}>Delete</button>
+						</div>
+					</div>)
+				})}
+			</div>
+			<div className="workers-panel">
+				<WorkersPanel />
+			</div>
 		</div>
 	);
 }
