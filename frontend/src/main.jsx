@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./App.jsx";
 import NoPage from "./components/NoPage";
-import LoginPage from "./components/loginPage";
+import LoginPage from "./components/LoginPage";
 
 createRoot(document.getElementById("root")).render(
 	<StrictMode>

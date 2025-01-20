@@ -8,11 +8,22 @@ import {
 
 function Workers() {
 	const [users, setUsers] = useState([]);
+	const [activeButton, setActiveButton] = useState(0);
+	const [buttonText, setButtonText] = useState('Dodaj');
+
+	const buttonChangeClick = (index) => {
+		setButtonText(index === 0 ? 'Dodaj' : 'Edytuj');
+		if (activeButton === null || activeButton !== index) {
+			setActiveButton(index);
+		}
+	};
 
 	const fetchAPI = async () => {
 		axios
 			.get("/api")
-			.then((users) => setUsers(users.data))
+			.then((users) => {
+				setUsers(users.data)
+			})
 			.catch((err) => console.log(err));
 	};
 
@@ -27,7 +38,7 @@ function Workers() {
 	}
 
 	const buttonStyle = {
-		backgroundColor: 'red',
+		display: activeButton === 1 ? 'block' : 'none'
 	};
 
 	return (
@@ -44,7 +55,7 @@ function Workers() {
 							<p>{item.name}</p>
 						</div>
 						<div className="worker-items">
-							<div className="item-option"><p>Czas Pracy</p><p>{`${minutesToTime(item.startWorkTime)} - ${minutesToTime(item.endWorkTime)}`}</p></div>
+							<div className="item-option"><p>Czas Pracy</p><p>{`${item.startWorkTime} - ${item.endWorkTime}`}</p></div>
 							<div className="item-option"><p>Pensja</p><p>{`${item.salary} PLN`}</p></div>
 							<div className="item-option"><p>Telefon</p><p>{item.phone}</p></div>
 							<div className="item-option"><p>Przydzielona Maszyna</p><p>{item.machine}</p></div>
@@ -53,9 +64,7 @@ function Workers() {
 					</div>)
 				})}
 			</div>
-			<div className="workers-panel">
-				<WorkersPanel />
-			</div>
+			<WorkersPanel activeButton={activeButton} buttonChangeClick={buttonChangeClick} buttonText={buttonText}/>
 		</div>
 	);
 }

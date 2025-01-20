@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:3000', // Proxy dla backendu
-      '/api/pracownicy': 'http://localhost:3000',
+      '/api': 'https://buildplan.online:3000', // Proxy dla backendu
+      '/api/pracownicy': 'https://buildplan.online:3000',
     },
   },
 })

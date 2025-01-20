@@ -4,7 +4,7 @@ const path = require('path'); // Dodaj ten import
 const app = express();
 const cors = require('cors')
 const corsOptions = {
-    origin: ['localhost:5173'],
+    origin: 'https://buildplan.online',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -29,6 +29,12 @@ app.get('/api', (req, res) => {
         .catch(err => res.json(err))
 });
 
+app.get('/api/pracownicy', (req, res) => {
+    UserModel.find()
+        .then(users => res.json(users))
+        .catch(err => res.json(err))
+});
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
@@ -38,7 +44,6 @@ app.post('/', (req, res) => {
 });
 
 app.post('/api/pracownicy', async (req, res) => {
-    console.log(req.body);
     try {
         // Utworzenie nowego dokumentu na podstawie danych przesłanych w żądaniu
         const user = new UserAddModel(req.body);

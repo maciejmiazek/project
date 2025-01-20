@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true, },
-    endWorkTime: { type: Number, required: true, },
+    endWorkTime: { type: String, required: true, },
     machine: { type: Array },
     phone: { type: String, required: true, },
     salary: { type: Number, required: true, },
-    startWorkTime: { type:  Number, required: true, },
+    startWorkTime: { type:  String, required: true, },
 })
 
 const userAddSchema = new mongoose.Schema({
@@ -20,23 +20,19 @@ const userAddSchema = new mongoose.Schema({
             message: 'Imię i nazwisko musi zawierać co najmniej 3 znaki'
         }
     },
+    endWorkTime: { type: String, required: true },
     machine: { type: Array },
-    phone: { type: String, required: true },
-    salary: { type: String, required: true },
-    startWorkTime: {
-        type: Number, required: true, validate: {
-            validator: function (value) {
-                return value && value.toISOString() !== '1970-01-01T00:00:00.000Z';
-            },
+    phone: { 
+        type: String, 
+        validate: { 
+            validator: function (value) { 
+                return value === "" || (value && value.match(/\d{3}-\d{3}-\d{3}/))
+            }, 
+            message: 'Niepoprawny format numeru telefonu' 
         }
     },
-    endWorkTime: {
-        type: Number, required: true, validate: {
-            validator: function (value) {
-                return value && value.toISOString() !== '1970-01-01T00:00:00.000Z';
-            },
-        }
-    },
+    salary: { type: Number, required: true },
+    startWorkTime: { type: String, required: true },
 })
 
 const UserModel = mongoose.model('users', userSchema, 'users')

@@ -1,10 +1,10 @@
 import React from "react";
+import "./LoginPage.css";
 
 function LoginPage() {
 
 	return (
-		<div className='login'>
-			
+		<div className='login-page'>
 			<h1>Logowanie</h1>
 			<form action="/" method="post">
 				<input type="text" name="login" id="login" placeholder="Login" />
