@@ -2,42 +2,39 @@ import { React, useState, useEffect } from "react";
 import "./WorkersPanel.css";
 import axios from "axios";
 
-function WorkersPanel({activeButton, buttonChangeClick, buttonText}) {
-	const [formData, setFormData] = useState({
-		name: '',
-		phone: '',
-		machine: [],
-		salary: 0,
-		startWorkTime: '6:00',
-		endWorkTime: '16:00',
-	});
-	const [message, setMessage] = useState('');
+function WorkersPanel({activeButton, buttonChangeClick, buttonText, fetchAPI, setAlertText, setAlertIsVisible, formData, setFormData, updateWorker}) {
 	
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
 	const handleSubmit = async (e) => {
-		if (activeButton !== 0) {
-			return;
-		}
 		e.preventDefault()
-	
-		try {
-		  // Wysyłanie danych do serwera za pomocą axios
-		  const response = await axios.post('/api/pracownicy', formData);
-	
-		  // Obsługa odpowiedzi z serwera
-		  if (response.status === 200) {
-			setMessage(`Sukces: ${response.data.message}`);
-		  }
-		} catch (error) {
-		  // Obsługa błędów
-		  if (error.response) {
-			setMessage(`Błąd: ${error.response.data.message}`);
-		  } else {
-			setMessage('Błąd podczas łączenia z serwerem.');
-		  }
+		if (activeButton === 0) {
+			try {
+				// Wysyłanie danych do serwera za pomocą axios
+				const response = await axios.post('/api/pracownicy', formData);
+		  
+				// Obsługa odpowiedzi z serwera
+				if (response.status === 200) {
+				  console.log(response.data);
+				  setAlertText(response.data.message);
+				  setAlertIsVisible(true);
+				  fetchAPI();
+				  setTimeout(() => {
+					  setAlertIsVisible(false);
+				  }, 3000);
+				}
+			  } catch (error) {
+				// Obsługa błędów
+				if (error.response) {
+				  setMessage(`Błąd: ${error.response.data.message}`);
+				} else {
+				  setMessage('Błąd podczas łączenia z serwerem.');
+				}
+			}
+		}else if (activeButton === 1) {
+			updateWorker();
 		}
 	};
 
@@ -49,7 +46,7 @@ function WorkersPanel({activeButton, buttonChangeClick, buttonText}) {
 			</div>
 			<form onSubmit={handleSubmit}>
 				<div className="form-bulk">
-					<div className="input-name"><p>Imie i Nazwisko</p></div>
+					<div className="input-name"><p>Imię i Nazwisko</p></div>
 					<div className="input-choose">
 						<input type="text" name="name" value={formData.name} onChange={handleChange} required/>
 					</div>
@@ -102,4 +99,3 @@ function WorkersPanel({activeButton, buttonChangeClick, buttonText}) {
 }
 
 export default WorkersPanel;
-export const myVariable = 'Hello from config.js!';

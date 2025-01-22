@@ -1,8 +1,44 @@
 .workers {
+	position: relative;
 	display: flex;
 	width: 100%;
 	height: 100%;
 	font-family: Poppins, sans-serif;
+	overflow: hidden;
+}
+
+.workers-alert {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	bottom: -80px;
+	width: 100%;
+	height: 80px;
+	font-family: Poppins, sans-serif;
+	background-color: #23CE65;
+	font-size: 24px;
+	font-weight: bold;
+	transition: 3s ease;
+}
+  
+@keyframes slideIn {
+	0% {
+		bottom: -80px;
+	}
+	20%{
+		bottom: 0px;
+	}
+	80%{
+		bottom: 0px;
+	}
+	100% {
+		bottom: -80px;
+	}
+}
+
+.workers-alert.show {
+	animation: slideIn 3s ease forwards;
 }
 
 .workers-main {
@@ -29,13 +65,18 @@
 	align-items: center;
 	flex-direction: column;
 	width: 300px;
-	height: 450px;
 	background-color: #222222;
 	border-radius: 10px;
 	margin: 20px;
-	border: 4px solid #222222;
+	border: 3px solid #222222;
 	overflow: hidden;
+	transition: transform 0.3s ease;
 }
+
+.card-board.edit:hover {
+	transform: scale(1.005);
+	cursor: pointer;
+  }
 
 .worker-avatar {
 	position: relative;
@@ -46,6 +87,7 @@
 	width: 100%;
 	height: 35%;
 	background-color: #333;
+	padding: 15px 0;
 }
 
 .status-box{
@@ -61,6 +103,7 @@
 	font-size: 12px;
 	font-weight: bold;
 	border-bottom-left-radius: 10px;
+	overflow: hidden;
 }
 
 .worker-avatar p{
@@ -72,12 +115,12 @@
 .worker-items {
 	position: relative;
 	display: flex;
-	justify-content: center;
-	align-items: center;
 	flex-direction: column;
+	align-items: center;
 	width: 100%;
 	height: 65%;
 	background-color: #555;
+	font-weight: bold;
 }
 
 .circle{
@@ -101,17 +144,37 @@
 	display: flex;
 	justify-content: space-evenly;
 	align-items: center;
+	border-top: 3px solid #222;
+}
+
+.item-option-name{
+	width: 50%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.item-option-value{
+	width: 50%;
+	height: 100%;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
 }
 
 .delete-option{
-	position: absolute;
-	bottom: 0;
+	bottom: 5px;
 	width: 100%;
-	height: 10%;
+	height: 40px;
 	background-color: tomato;
 	cursor: pointer;
 	font-weight: bold;
 	border: none;
+	text-transform: uppercase;
 	display: none;
 	color: white;
+	font-size: 18px;
+	border-top: 3px solid #222;
+	font-family: Poppins, sans-serif;
 }

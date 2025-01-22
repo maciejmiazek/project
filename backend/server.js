@@ -4,7 +4,7 @@ const path = require('path'); // Dodaj ten import
 const app = express();
 const cors = require('cors')
 const corsOptions = {
-    origin: 'https://buildplan.online',
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -43,16 +43,32 @@ app.post('/', (req, res) => {
     res.redirect('/planowanie');
 });
 
+app.delete('/api/pracownicy/:id', async (req, res) => {
+    try {
+        await UserModel.deleteOne({ _id: req.params.id });
+        res.status(200).json({ message: 'Pracownik usunięty' });
+    } catch (error) {
+        console.error('Błąd podczas usuwania:', error.message);
+        res.status(500).json({ message: 'Błąd serwera' });
+    }
+});
+
+app.put('/api/pracownicy/:id', async (req, res) => {
+    try {
+        await UserModel.updateOne({ _id: req.params.id}, req.body);
+        res.status(200).json({ message: 'Pracownik zaktualizowany' });
+    }
+    catch (error) {
+        console.error('Błąd podczas aktualizacji:', error.message);
+        res.status(500).json({ message: 'Błąd serwera' });
+    }
+});
+
 app.post('/api/pracownicy', async (req, res) => {
     try {
-        // Utworzenie nowego dokumentu na podstawie danych przesłanych w żądaniu
         const user = new UserAddModel(req.body);
-
-        // Walidacja i zapis do bazy
-        const savedPracownik = await user.save();
-
-        // Odpowiedź do klienta
-        res.status(201).json({ message: 'Pracownik zapisany', data: savedPracownik });
+        await user.save();
+        res.status(200).json({ message: 'Pracownik zapisany'});
     } catch (error) {
         console.error('Błąd podczas zapisu:', error.message);
 
