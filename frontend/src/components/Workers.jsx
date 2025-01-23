@@ -23,6 +23,14 @@ function Workers() {
 		startWorkTime: '6:00',
 		endWorkTime: '16:00',
 	});
+	const { 
+		data: workers, 
+		isLoading, 
+		error, 
+		createData, 
+		updateData, 
+		deleteData 
+	} = useCrud('/api/pracownicy');
 
 	const buttonChangeClick = (index) => {
 		setButtonText(index === 0 ? 'Dodaj' : 'Edytuj');

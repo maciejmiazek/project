@@ -22,18 +22,8 @@ const db_host = process.env.DB_HOST
 const db_user = process.env.DB_USER
 const db_pass = process.env.DB_PASS
 mongoose.connect(`mongodb+srv://${db_user}:${db_pass}@cluster0.${db_host}/project`)
-
-app.get('/api', (req, res) => {
-    UserModel.find()
-        .then(users => res.json(users))
-        .catch(err => res.json(err))
-});
-
-app.get('/api/pracownicy', (req, res) => {
-    UserModel.find()
-        .then(users => res.json(users))
-        .catch(err => res.json(err))
-});
+.then(() => console.log('Połączono z bazą danych'))
+.catch(err => console.error('Błąd połączenia z bazą danych:', err.message));
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
@@ -41,6 +31,26 @@ app.get('*', (req, res) => {
 
 app.post('/', (req, res) => {
     res.redirect('/planowanie');
+});
+
+app.get('/api', (req, res) => {
+    res.status(200).json({
+      message: 'Witaj w naszym API!',
+      version: '1.0.0',
+      endpoints: {
+        pracownicy: '/api/planowanie',
+        magazyn: '/api/pracownicy',
+        produkty: '/api/maszyny',
+        status: '/api/magazyn',
+        status: '/api/finanse'
+      }
+    });
+});
+
+app.get('/api/pracownicy', (req, res) => {
+    UserModel.find()
+        .then(users => res.json(users))
+        .catch(err => res.json(err))
 });
 
 app.delete('/api/pracownicy/:id', async (req, res) => {
