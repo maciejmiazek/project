@@ -1,0 +1,184 @@
+.planning{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-direction: column;
+}
+
+.calendar{
+	width: 85%;
+	height: 70%;
+	background-color: #111;
+
+}
+
+.button-bar{
+	width: 100%;
+	height: 50px;
+	display: flex;
+	justify-content: center;
+	align-content: center;
+}
+
+.button-bar p{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	font-weight: bold;
+	width: 150px;
+	text-transform: capitalize;
+}
+
+.button-bar button{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: none;
+	background: none;
+	margin: 0 20px;
+	cursor: pointer;
+}
+
+.calendar-table{
+	width: 100%;
+	height: 95%;
+	display: flex;
+	background-color: aliceblue;
+	overflow: auto;
+}
+
+.user-col{
+	width: 15%;
+	display: flex;
+	flex-direction: column;
+	background-color: #111;
+}
+
+.day-col{
+	width: 12%;
+	display: flex;
+	flex-direction: column;
+	border: 2px solid black;
+}
+
+.background-col{
+	width: 5%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	background-color: #111;
+}
+
+.day-col .grid-box:first-child{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 5%;
+	font-weight: bold;
+	background-color: #111;
+	color: aliceblue;
+}
+
+.user-col .grid-box:first-child{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 5%;
+	font-weight: bold;
+	background-color: #111;
+}
+
+.grid-box{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 10%;
+	font-weight: bold;
+}
+
+.day-col .grid-box{
+	color: black;
+}
+
+.bar{
+	height: 50%;
+	width: 100%;
+	background-color: rgb(32, 101, 212);
+	cursor: pointer;
+}
+
+.planning-panel{
+	position: relative;
+	display: flex;
+	justify-content: center;
+	width: 85%;
+	height: 15%;
+	background-color: #444;
+	border: 4px solid #222;
+}
+
+.planning-panel button{
+	position: absolute;
+	top: -50px;
+	height: 50px;
+	background-color: #444;
+	border: 4px solid #222;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.panel-task{
+	width: 20%;
+	left: -4px;
+}
+
+.new-task{
+	width: 10%;
+	right: 10%;
+}
+
+.edit-task{
+	width: 10%;
+	right: -4px;
+}
+
+.planning-panel form{
+	position: relative;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	font-weight: bold;
+}
+
+.planning-panel form div{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	width: 20%;
+	height: 100%;
+}
+
+.planning-panel form div p{
+	margin-top: 0;
+}
+
+.planning-panel form input{
+	height: 20%;
+}
+
+.planning-panel form button{
+	position: absolute;
+	top: 110px;
+	right: -4px;
+	width: 10%;
+	margin: 0;
+}

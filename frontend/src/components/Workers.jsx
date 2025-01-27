@@ -1,141 +1,55 @@
 import { React, useState, useEffect } from "react";
-import WorkersPanel from "./WorkersPanel";
+import useCrud from "./hooks/UseCrud";
+import EditPanel from "./EditPanel/EditPanel";
+import { IconUser } from "@tabler/icons-react";
 import "./Workers.css";
-import axios from "axios";
-import {
-	IconUser,
-	IconClockHour4
-} from "@tabler/icons-react";
 
 function Workers() {
-	const [users, setUsers] = useState([]);
-	const [cardId, setCardId] = useState(null);
-	const [activeButton, setActiveButton] = useState(0);
 	const [buttonText, setButtonText] = useState('Dodaj');
-	const [message, setMessage] = useState('');
-	const [alertText, setAlertText] = useState('');
-	const [alertIsVisible, setAlertIsVisible] = useState(false);
-	const [formData, setFormData] = useState({
-		name: '',
-		phone: '',
-		machine: [],
-		salary: 0,
-		startWorkTime: '6:00',
-		endWorkTime: '16:00',
-	});
-	const { 
-		data: workers, 
-		isLoading, 
-		error, 
-		createData, 
-		updateData, 
-		deleteData 
-	} = useCrud('/api/pracownicy');
+
+	const { data: itemData, createHandle, deleteData, activeButton, setActiveButton, alertText, alertIsVisible, formData, setFormData, cardId, setCardId, endpoint} = useCrud('/api/pracownicy');
 
 	const buttonChangeClick = (index) => {
 		setButtonText(index === 0 ? 'Dodaj' : 'Edytuj');
 		if (activeButton === null || activeButton !== index) {
 			setActiveButton(index);
 			
-			setFormData({
-				name: '',
-				phone: '',
-				machine: [],
-				salary: 0,
-				startWorkTime: '6:00',
-				endWorkTime: '16:00',
-			});
+			setFormData((prev) => ({
+				...prev,
+				pracownicy: {
+				  ...prev.pracownicy,
+				},
+			}));
+			console.log(formData);
 			setCardId(null)
 		}
 	};
-
-	const fetchAPI = async () => {
-		axios
-		.get("/api/pracownicy")
-		.then((users) => {
-			setUsers(users.data)
-		})
-		.catch((err) => console.log(err));
-	};
-
-	const deleteWorker = async (i) => {
-		if (activeButton !== 1) {
-			return
-		}
-
-		const objectId = users[i]._id
-
-		try {
-			const response = await axios.delete(`/api/pracownicy/${objectId}`);
-	  
-			if (response.status === 200) {
-			  console.log(response.data);
-			  setMessage(response.data.message);
-			  setAlertIsVisible(true);
-			  fetchAPI();
-			  setTimeout(() => {
-				setAlertIsVisible(false);
-			  }, 3000);
-			}
-
-		  } catch (error) {
-			console.log(error);
-		}
-	};
-
-	const updateWorker = async () => {
-		try {
-			const objectId = users[cardId]._id;
-			const response = await axios.put(`/api/pracownicy/${objectId}`, formData);
-			setMessage(response.data.message);
-
-			if (response.status === 200) {
-			  console.log(response.data.message);
-			  setAlertText(response.data.message);
-			  setAlertIsVisible(true);
-			  fetchAPI();
-			  setTimeout(() => {
-				setAlertIsVisible(false);
-				}, 3000);
-			}
-
-		  } catch (error) {
-			setAlertText(message);
-			setAlertIsVisible(true);
-			setTimeout(() => {
-				setAlertIsVisible(false);
-			}, 3000);
-		}
-	}
 
 	const editInsert = (i) => {
 		if (activeButton !== 1) {
 			return
 		}
 
-		setFormData({
-			name: users[i].name,
-			phone: users[i].phone,
-			machine: users[i].machine,
-			salary: users[i].salary,
-			startWorkTime: users[i].startWorkTime,
-			endWorkTime: users[i].endWorkTime,
-		});
+		setFormData((prev) => ({
+			...prev,
+			pracownicy: {
+			  	...prev.pracownicy,
+			  	name: itemData[i].name,
+				phone: itemData[i].phone,
+				machine: itemData[i].machine,
+				salary: itemData[i].salary,
+				startWorkTime: itemData[i].startWorkTime,
+				endWorkTime: itemData[i].endWorkTime,
+			},
+		}));
+
 		setCardId(i)
-	};
-
-	useEffect(() => {
-		fetchAPI();
-	}, []);
-
-	const buttonStyle = {
-		display: activeButton === 1 ? 'block' : 'none'
 	};
 
 	return (
 		<div className='workers'>
 			<div className='workers-main'>
-				{users.map((item, i) => {
+				{typeof(itemData) === 'object' ? itemData.map((item, i) => {
 					return (
 					<div key={i} className={`card-board ${activeButton === 1 ? 'edit' : ''}`} style={{border: cardId === i && activeButton === 1 ? '3px solid whitesmoke' : ''}} onClick={() => {editInsert(i)}}>
 						<div className="worker-avatar">
@@ -178,12 +92,12 @@ function Workers() {
 									<p>{item.machine != '' ? item.machine : 'brak'}</p>
 								</div>
 							</div>
-							<button className="delete-option" onClick={() => {deleteWorker(i)} } style={buttonStyle}>Delete</button>
+							<button className="delete-option" onClick={() => {deleteData(i)} } style={{display: activeButton === 1 ? 'block' : 'none'}}>Delete</button>
 						</div>
 					</div>)
-				})}
+				}): console.log('server error')}
 			</div>
-			<WorkersPanel activeButton={activeButton} buttonChangeClick={buttonChangeClick} buttonText={buttonText} fetchAPI={fetchAPI} setAlertText={setAlertText} setAlertIsVisible={setAlertIsVisible} formData={formData} setFormData={setFormData} updateWorker={updateWorker}/>
+			<EditPanel activeButton={activeButton} buttonChangeClick={buttonChangeClick} buttonText={buttonText} formData={formData} setFormData={setFormData} createHandle={createHandle} endpoint={endpoint}/>
 			<div className={`workers-alert ${alertIsVisible ? 'show' : ''}`}><p>{alertText}</p></div>
 		</div>
 	);
