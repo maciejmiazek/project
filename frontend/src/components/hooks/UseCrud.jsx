@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import "../../App.css";
 
 function useCrud(endpoint) {
   const [data, setData] = useState([]);
@@ -25,12 +26,18 @@ function useCrud(endpoint) {
       description: '',
       imgUrl: '',
     },
+    planowanie: {
+      workerId: "",
+      startDate: "",
+      endDate: "",
+      description: "",
+      machineId: "",
+    },
 	});
 
   const fetchData = async () => {
     try {
       const response = await axios.get(endpoint);
-      console.log(response.data);
       setData(response.data);
     } catch (e) {
       setAlertText(e);

@@ -56,10 +56,7 @@ app.get('/api/maszyny', (req, res) => {
 
 app.get('/api/planowanie', (req, res) => {
     PlanningModel.find()
-    .then(items => {
-        console.log(items);
-        res.json(items)
-    })
+    .then(items => res.json(items))
     .catch(err => res.json(err))
 });
 
@@ -101,7 +98,7 @@ app.post('/api/maszyny', async (req, res) => {
 app.post('/api/planowanie', async (req, res) => {
     try {
         console.log(req.body);
-        const item = new PlanningModel(req.body);
+        const item = new PlanningAddModel(req.body);
         await item.save();
         res.status(200).json({ message: 'Harmonogram zapisany'});
     } catch (error) {
