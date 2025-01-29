@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import useCrud from "./hooks/UseCrud";
-import axios from "axios";
+import MouseHover from './MouseHover';
 import {
 	IconArrowBigLeftFilled,
 	IconArrowBigRightFilled,
@@ -136,17 +136,23 @@ function Planning() {
 									{daysToDisplay.map((day, index) => {
 										// Konwertujemy obiekt day na format YYYY-MM-DD (lub Date, zależnie od Twoich potrzeb)
 										const dayString = day.toISOString().split("T")[0];
-
+										let startString = ''
+										let endString = ''
+										let planningId = ''
+										let planningDesc = ''
 										// 2. Sprawdzamy, czy w userPlans jest JAKIKOLWIEK wpis, w którym day mieści się
 										//    pomiędzy startDate i endDate
 										const isPlanned = userPlans.some((plan) => {
 											// Tu można też użyć dayjs / date-fns / luxon, ale z czystym JS będzie tak:
-											const startString = new Date(plan.startDate)
+											startString = new Date(plan.startDate)
 												.toISOString()
 												.split("T")[0];
-											const endString = new Date(plan.endDate)
+											endString = new Date(plan.endDate)
 												.toISOString()
 												.split("T")[0];
+
+											planningId = plan._id
+											planningDesc = plan.description
 
 											// Porównanie "YYYY-MM-DD" jako stringów działa poprawnie TYLKO gdy to jest ten sam format,
 											// i jeśli nie uwzględniasz stref czasowych.
@@ -164,7 +170,10 @@ function Planning() {
 													<div
 														className='bar'
 														style={{ backgroundColor: userColor }}
-													></div>
+														data={planningId}
+													>
+														<MouseHover startDate={startString} endDate={endString} description={planningDesc}/>
+													</div>
 												)}
 											</div>
 										);

@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const PlanningSchema = new mongoose.Schema({
-    workerId: { type: String, required: true, },
+    workerId: {  type: mongoose.Schema.Types.ObjectId, required: true, },
     startDate: { type:  Date, required: true,},
     endDate: { type:  Date, required: true,},
     description: { type: String },
-    machineId: { type: String },
+    machineId: { type: mongoose.Schema.Types.ObjectId },
 })
 
 const PlanningAddSchema = new mongoose.Schema({

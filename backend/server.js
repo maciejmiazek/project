@@ -166,17 +166,6 @@ app.delete('/api/maszyny/:id', async (req, res) => {
     }
 });
 
-app.delete('/api/planowanie/:id', async (req, res) => {
-    try {
-        await PlanningModel.deleteOne({ _id: req.params.id });
-        res.status(200).json({ message: 'Harmonogram usunięty' });
-    } catch (error) {
-        console.error('Błąd podczas usuwania:', error.message);
-        res.status(500).json({ message: 'Błąd serwera' });
-    }
-});
-
-
 app.get('*', (req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });

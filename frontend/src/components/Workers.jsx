@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import useCrud from "./hooks/UseCrud";
 import EditPanel from "./EditPanel/EditPanel";
 import { IconUser } from "@tabler/icons-react";
