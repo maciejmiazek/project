@@ -47,19 +47,17 @@ function Planning() {
 	}
 
 	const handleChange = (e) => {
-		const clearEndpoint = endpoint.split('/')[2]
 		
-		if (clearEndpoint === 'planowanie') {
-			setFormData((prev) => ({
-				...prev,
-				'planowanie': {
-					  ...prev.planowanie,
-					  [e.target.name]: e.target.value
-				},
-			}));
-		}
+		setFormData((prev) => ({
+			...prev,
+			'planowanie': {
+				...prev.planowanie,
+				[e.target.name]: e.target.value
+			},
+		}));
+		
 	};
-
+	
 	const buttonChangeClick = (index) => {
 		setButtonText(index === 0 ? 'Dodaj' : 'Edytuj');
 		if (activeButton === null || activeButton !== index) {
@@ -71,9 +69,28 @@ function Planning() {
 				  ...prev.planowanie,
 				},
 			}));
-			console.log(formData);
+
 			setCardId(null)
 		}
+	};
+
+	const editInsert = (planId) => {	
+		const selectedPlan = planningData.find(plan => plan._id === planId);
+		if (!selectedPlan) return;
+	
+		setFormData((prev) => ({
+			...prev,
+			planowanie: {
+				...prev.planowanie,
+				workerId: selectedPlan.workerId,
+				startDate: selectedPlan.startDate.split("T")[0], // Format YYYY-MM-DD
+				endDate: selectedPlan.endDate.split("T")[0], // Format YYYY-MM-DD
+				description: selectedPlan.description,
+				machineId: selectedPlan.machineId,
+			},
+		}));
+
+		setCardId(planId);
 	};
 
 	return (
@@ -160,7 +177,7 @@ function Planning() {
 											return dayString >= startString && dayString <= endString;
 										});
 
-										// 3. Jeśli `isPlanned` jest true, renderujemy pasek.
+										// 3. Jeśli isPlanned jest true, renderujemy pasek.
 										return (
 											<div
 												className='grid-box'
@@ -171,6 +188,11 @@ function Planning() {
 														className='bar'
 														style={{ backgroundColor: userColor }}
 														data={planningId}
+														onClick={() => {
+															setActiveButton(1)
+															buttonChangeClick(1)
+															editInsert(planningId)
+														}}
 													>
 														<MouseHover startDate={startString} endDate={endString} description={planningDesc}/>
 													</div>
@@ -196,7 +218,7 @@ function Planning() {
 						<p>Pracownik</p>
 						<select
 							name='workerId'
-							value={formData.workerId}
+							value={formData['planowanie'].workerId}
 							onChange={handleChange}
 						>
 							<option>Wybierz</option>
@@ -215,7 +237,7 @@ function Planning() {
 						<p>Rozpoczęcie</p>
 						<input
 							type='date'
-							value={formData.startDate}
+							value={formData['planowanie'].startDate}
 							onChange={handleChange}
 							name='startDate'
 						/>
@@ -225,7 +247,7 @@ function Planning() {
 						<p>Koniec</p>
 						<input
 							type='date'
-							value={formData.endDate}
+							value={formData['planowanie'].endDate}
 							onChange={handleChange}
 							name='endDate'
 						/>
@@ -233,7 +255,7 @@ function Planning() {
 
 					<div className='machine-col'>
 						<p>Maszyna</p>
-						<select name='machineId' value={formData.machineId} onChange={handleChange}>
+						<select name='machineId' value={formData['planowanie'].machineId} onChange={handleChange}>
 							<option>
 								Wybierz
 							</option>
@@ -252,7 +274,7 @@ function Planning() {
 						<p>Opis</p>
 						<textarea
 							name='description'
-							value={formData.description}
+							value={formData['planowanie'].description}
 							onChange={handleChange}
 						></textarea>
 					</div>

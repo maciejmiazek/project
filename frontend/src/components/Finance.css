@@ -1,0 +1,263 @@
+.dashboard {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 40px;
+    gap: 20px;
+    color: white;
+  }
+  
+  .left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 30%;
+  }
+  
+  .right-panel {
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    gap: 20px;
+  }
+  
+  .info-box {
+    background-color: #444;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .info-box:hover {
+    cursor: default;
+    cursor: pointer;
+  }
+  
+  .info-title {
+    margin: 0;
+    font-size: 16px;
+    text-align: left;
+  }
+  
+  .white-text {
+    color: #ffffff;
+  }
+  
+  .orange-text {
+    color: #ffa500;
+  }
+  
+  .green-text {
+    color: #4caf50;
+  }
+  
+  .amount {
+    margin: 10px 0 0;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .icons-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 20px;
+  }
+  
+  .icon-button {
+    position: relative;
+    background-color: #ffd700;
+    border: none;
+    border-radius: 8px;
+    padding: 20px;
+    aspect-ratio: 1/1;
+    font-size: 20px;
+    border: 2px solid #444;
+    transition: transform 0.2s;
+    cursor: pointer;
+    max-width: 140px;
+  }
+
+  .icon-button svg{
+    color: #444;
+  }
+
+  .desc{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 25px;
+    background-color: #333;
+    font-family: Poppins, sans-serif;
+    font-weight: bold;
+  }
+
+  .desc p{
+    margin: 0;
+    text-align: center;
+    font-size: 12px;
+    color: white;
+  }
+  
+  .icon-button:hover {
+    transform: scale(1.05);
+  }
+
+  .icon-button svg {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .month-selector {
+    background-color: #444;
+    margin: 0 20px;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .month-selector h3 {
+    margin: 0 0 10px 0;
+  }
+  
+  .month-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .month-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+
+  }
+  
+  .current-month {
+    font-size: 18px;
+  }
+  
+  .costs-panel {
+    padding: 20px;
+    border-radius: 8px;
+    height: 100%;
+  }
+  
+  .costs-panel button {
+    margin: 0;
+    padding: 10px;
+    width: 50%;
+    background-color: #222;
+    border-radius: 6px 6px 0 0;
+    color: white;
+    font-weight: bold;
+    font-family: Poppins, sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .costs-list {
+    background-color: #444;
+    border-radius: 0 0 6px 6px;
+    padding: 10px;
+    height: 80%;
+    overflow-y: auto;
+  }
+
+  .costs-list form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .costs-list button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+
+  .expanded-item{
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background-color: #555;
+    border-bottom: 2px solid #333;
+  }
+
+  .expanded-item:first-child{
+    margin-top: 15px;
+    border-top: 2px solid #333;
+  }
+
+  .panel{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .expanded-panel{
+    width: 100%;
+  }
+  
+  .cost-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background-color: #555;
+    margin-bottom: 15px;
+    border-radius: 6px;
+  }
+
+  .worker{
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+  }
+
+  .item-display{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .cost-icon {
+    margin-right: 10px;
+    font-size: 20px;
+  }
+  
+  .cost-name {
+    flex-grow: 1;
+  }
+  
+  .cost-value {
+    color: #ff4444;
+    font-weight: bold;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard {
+      flex-direction: column;
+    }
+  
+    .right-panel {
+      width: 100%;
+    }
+  
+    .icons-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }

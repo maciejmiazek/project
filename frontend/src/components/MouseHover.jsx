@@ -6,10 +6,9 @@ const MouseHover = ({ startDate, endDate, description }) => {
     const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
     const handleMouseMove = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
         setTooltipPosition({
-            x: e.clientX - rect.left + 10, // Pozycja X względem paska
-            y: e.clientY - rect.top + 10,  // Pozycja Y względem paska
+            x: e.clientX + 10, // Pozycja względem całego okna
+            y: e.clientY + 10,
         });
         setShowTooltip(true);
     };
@@ -29,8 +28,11 @@ const MouseHover = ({ startDate, endDate, description }) => {
                 <div
                     className="tooltip"
                     style={{
+                        position: 'fixed',  // Przenieś tooltip do całego okna
                         left: `${tooltipPosition.x}px`,
                         top: `${tooltipPosition.y}px`,
+                        zIndex: 1000, // Na wierzchu innych elementów
+                        pointerEvents: 'none', // Nie koliduje z interakcjami
                     }}
                 >
                     <p>Od: {startDate}</p>

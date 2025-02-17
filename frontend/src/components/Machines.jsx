@@ -42,6 +42,7 @@ function Machines() {
 		if (activeButton !== 1) {
 			return;
 		}
+
 		console.log(i);
 
 		setFormData((prev) => ({

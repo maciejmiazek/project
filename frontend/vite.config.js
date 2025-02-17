@@ -10,6 +10,8 @@ export default defineConfig({
       '/api/pracownicy': 'http://localhost:3000',
       '/api/maszyny': 'http://localhost:3000',
       '/api/planowanie': 'http://localhost:3000',
+      '/api/magazyn': 'http://localhost:3000',
+      '/api/finanse': 'http://localhost:3000',
     },
   },
 })

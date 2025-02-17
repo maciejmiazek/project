@@ -16,6 +16,8 @@ const mongoose = require('mongoose');
 const { UserModel, UserAddModel } = require('./models/Users');
 const { MachineModel, MachineAddModel } = require('./models/Machines');
 const { PlanningModel, PlanningAddModel } = require('./models/Planning');
+const { WarehouseModel, WarehousePutModel, WarehouseAddModel } = require('./models/Warehouse');
+const { FinanceModel, FinancePutModel, FinanceAddModel } = require('./models/Finance');
 
 app.use(express.json())
 app.use(express.static(path.join(frontendPath)));
@@ -25,46 +27,58 @@ const db_user = process.env.DB_USER
 const db_pass = process.env.DB_PASS
 
 mongoose.connect(`mongodb+srv://${db_user}:${db_pass}@cluster0.${db_host}/project`)
-.then(() => console.log('Połączono z bazą danych'))
-.catch(err => console.error('Błąd połączenia z bazą danych:', err.message));
+    .then(() => console.log('Połączono z bazą danych'))
+    .catch(err => console.error('Błąd połączenia z bazą danych:', err.message));
 
 app.get('/api', (req, res) => {
     res.status(200).json({
-      message: 'Witaj w naszym API!',
-      version: '1.0.0',
-      endpoints: {
-        planowanie: '/api/planowanie',
-        pracownicy: '/api/pracownicy',
-        maszyny: '/api/maszyny',
-        magazyn: '/api/magazyn',
-        finanse: '/api/finanse'
-      }
+        message: 'Witaj w naszym API!',
+        version: '1.0.0',
+        endpoints: {
+            planowanie: '/api/planowanie',
+            pracownicy: '/api/pracownicy',
+            maszyny: '/api/maszyny',
+            magazyn: '/api/magazyn',
+            finanse: '/api/finanse'
+        }
     });
 });
 
 app.get('/api/pracownicy', (req, res) => {
     UserModel.find()
-    .then(users => res.json(users))
-    .catch(err => res.json(err))
+        .then(users => res.json(users))
+        .catch(err => res.json(err))
 });
 
 app.get('/api/maszyny', (req, res) => {
     MachineModel.find()
-    .then(items => res.json(items))
-    .catch(err => res.json(err))
+        .then(items => res.json(items))
+        .catch(err => res.json(err))
 });
 
 app.get('/api/planowanie', (req, res) => {
     PlanningModel.find()
-    .then(items => res.json(items))
-    .catch(err => res.json(err))
+        .then(items => res.json(items))
+        .catch(err => res.json(err))
+});
+
+app.get('/api/magazyn', (req, res) => {
+    WarehouseModel.find()
+        .then(items => res.json(items))
+        .catch(err => res.json(err))
+});
+
+app.get('/api/finanse', (req, res) => {
+    FinanceModel.find()
+        .then(items => res.json(items))
+        .catch(err => res.json(err))
 });
 
 app.post('/api/pracownicy', async (req, res) => {
     try {
         const user = new UserAddModel(req.body);
         await user.save();
-        res.status(200).json({ message: 'Pracownik zapisany'});
+        res.status(200).json({ message: 'Pracownik zapisany' });
     } catch (error) {
         console.error('Błąd podczas zapisu:', error.message);
         // Obsługa błędów walidacji
@@ -82,7 +96,7 @@ app.post('/api/maszyny', async (req, res) => {
         console.log(req.body);
         const item = new MachineModel(req.body);
         await item.save();
-        res.status(200).json({ message: 'Maszyna zapisana'});
+        res.status(200).json({ message: 'Maszyna zapisana' });
     } catch (error) {
         console.error('Błąd podczas zapisu:', error.message);
         // Obsługa błędów walidacji
@@ -100,7 +114,52 @@ app.post('/api/planowanie', async (req, res) => {
         console.log(req.body);
         const item = new PlanningAddModel(req.body);
         await item.save();
-        res.status(200).json({ message: 'Harmonogram zapisany'});
+        res.status(200).json({ message: 'Harmonogram zapisany' });
+    } catch (error) {
+        console.error('Błąd podczas zapisu:', error.message);
+        // Obsługa błędów walidacji
+        if (error.name === 'ValidationError') {
+            const errors = Object.values(error.errors).map((err) => err.message);
+            return res.status(400).json({ message: 'Błąd walidacji', errors });
+        }
+        // Inne błędy
+        res.status(500).json({ message: 'Błąd serwera' });
+    }
+});
+
+app.post('/api/magazyn', async (req, res) => {
+    try {
+        console.log(req.body);
+        const item = new WarehouseAddModel(req.body);
+        await item.save();
+        res.status(200).json({ message: 'Przedmiot zapisany' });
+    } catch (error) {
+        console.error('Błąd podczas zapisu:', error.message);
+        // Obsługa błędów walidacji
+        if (error.name === 'ValidationError') {
+            const errors = Object.values(error.errors).map((err) => err.message);
+            return res.status(400).json({ message: 'Błąd walidacji', errors });
+        }
+        // Inne błędy
+        res.status(500).json({ message: 'Błąd serwera' });
+    }
+});
+
+app.post('/api/finanse', async (req, res) => {
+    try {
+        console.log(req.body);
+
+        const item = await FinanceModel.findById('677edc054d7fc3791077dff0');
+
+        await FinanceModel.findByIdAndUpdate(
+            item._id,
+            {
+                $push: { costs: [req.body.category, req.body.name, req.body.count] },
+            },
+            { new: true }
+        )
+     
+        res.status(200).json({ message: 'Przedmiot zapisany' });
     } catch (error) {
         console.error('Błąd podczas zapisu:', error.message);
         // Obsługa błędów walidacji
@@ -115,7 +174,7 @@ app.post('/api/planowanie', async (req, res) => {
 
 app.put('/api/pracownicy/:id', async (req, res) => {
     try {
-        await UserModel.updateOne({ _id: req.params.id}, req.body);
+        await UserModel.updateOne({ _id: req.params.id }, req.body);
         res.status(200).json({ message: 'Pracownik zaktualizowany' });
     }
     catch (error) {
@@ -126,7 +185,7 @@ app.put('/api/pracownicy/:id', async (req, res) => {
 
 app.put('/api/maszyny/:id', async (req, res) => {
     try {
-        await MachineModel.updateOne({ _id: req.params.id}, req.body);
+        await MachineModel.updateOne({ _id: req.params.id }, req.body);
         res.status(200).json({ message: 'Maszyna zaktualizowana' });
     }
     catch (error) {
@@ -137,10 +196,84 @@ app.put('/api/maszyny/:id', async (req, res) => {
 
 app.put('/api/planowanie/:id', async (req, res) => {
     try {
-        await PlanningModel.updateOne({ _id: req.params.id}, req.body);
+        await PlanningModel.updateOne({ _id: req.params.id }, req.body);
         res.status(200).json({ message: 'Harmonogram zaktualizowany' });
     }
     catch (error) {
+        console.error('Błąd podczas aktualizacji:', error.message);
+        res.status(500).json({ message: 'Błąd serwera' });
+    }
+});
+
+app.put('/api/magazyn/:id', async (req, res) => {
+
+    try {
+        const { historyId } = req.body;
+        const index = parseInt(historyId, 10);
+        
+        if (historyId !== undefined && historyId !== null) {
+            console.log(historyId);
+            const { id } = req.params;
+            let flag = true;
+            let num = 0;
+
+            const item = await WarehouseModel.findById(id);
+            if (item.history[index][0] === false) {
+                flag = false
+                num = item.count + item.history[index][1]
+            }else{
+                flag = true
+                num = item.count - item.history[index][1]
+            }
+
+            await WarehouseModel.updateOne(
+                { _id: id },
+                { $unset: { [`history.${index}`]: 1 } }, // Ustawia history[2] na null
+            );
+            
+            await WarehouseModel.updateOne(
+                { _id: id },
+                { $pull: { history: null } },
+            );
+
+            await WarehouseModel.updateOne(
+                { _id: id },
+                { $inc: { count: flag === false ? item.history[index][1] : -item.history[index][1] } },
+            );
+            
+            return res.status(200).json({ message: 'Element historii usunięty' });
+
+        } else {
+            const { positive, amount, date } = req.body; // Pobieramy wartości z requesta
+            const { id } = req.params;
+
+            console.log(req.body);
+            const newAmount = amount.replace(/^0+/, '') || 0;
+
+            // Sprawdzenie, czy produkt istnieje
+            const item = await WarehouseModel.findById(id);
+            if (!item) {
+                return res.status(404).json({ message: 'Produkt nie znaleziony' });
+            }
+
+            if (positive === false && item.count < newAmount) {
+                return res.status(400).json({ message: 'Nie można dodać ujemnej ilości' });
+            }
+
+            const parseAmount = parseInt(newAmount, 10);
+            const updatedItem = await WarehouseModel.findByIdAndUpdate(
+                id,
+                {
+                    $inc: { count: positive ? parseAmount : -parseAmount },
+                    $push: { history: [positive ? true : false, newAmount, date] },
+                },
+                { new: true }
+            )
+
+            res.status(200).json(updatedItem);
+        }
+
+    } catch (error) {
         console.error('Błąd podczas aktualizacji:', error.message);
         res.status(500).json({ message: 'Błąd serwera' });
     }
@@ -159,6 +292,16 @@ app.delete('/api/pracownicy/:id', async (req, res) => {
 app.delete('/api/maszyny/:id', async (req, res) => {
     try {
         await MachineModel.deleteOne({ _id: req.params.id });
+        res.status(200).json({ message: 'Maszyna usunięta' });
+    } catch (error) {
+        console.error('Błąd podczas usuwania:', error.message);
+        res.status(500).json({ message: 'Błąd serwera' });
+    }
+});
+
+app.delete('/api/magazyn/:id', async (req, res) => {
+    try {
+        await WarehouseModel.deleteOne({ _id: req.params.id });
         res.status(200).json({ message: 'Maszyna usunięta' });
     } catch (error) {
         console.error('Błąd podczas usuwania:', error.message);

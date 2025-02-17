@@ -14,7 +14,7 @@ function LoginPage() {
 		<div className='login-page'>
 			<h1>Logowanie</h1>
 			<form onSubmit={handleRedirect}>
-				<input type="text" name="login" id="login" placeholder="Login" />
+				<input type="text" name="login" id="login" placeholder="Login" defaultValue="administator" value={'administator'}/>
 				<input type="password" name="pass" id="password" placeholder="Hasło" />
 				<button type="submit">Zaloguj</button>
 			</form>

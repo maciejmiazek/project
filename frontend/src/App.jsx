@@ -5,10 +5,9 @@ import Planning from "./components/Planning";
 import Workers from "./components/Workers";
 import Machines from "./components/Machines";
 import Warehouse from "./components/Warehouse";
+import Finance from "./components/Finance";
 import NoPage from "./components/NoPage";
 import "./App.css";
-
-const Finanse = () => <h2>Finanse</h2>;
 
 function App() {
   return (
@@ -20,7 +19,7 @@ function App() {
         <Route path="pracownicy" element={<Workers />} />
         <Route path="maszyny" element={<Machines />} />
         <Route path="magazyn" element={<Warehouse />} />
-        <Route path="finanse" element={<Finanse />} />
+        <Route path="finanse" element={<Finance />} />
         <Route path="*" element={<NoPage />} />
       </Route>
     </Routes>
