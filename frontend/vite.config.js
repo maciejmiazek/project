@@ -6,7 +6,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:3000', // Proxy dla backendu
+      '/api/logowanie': 'http://localhost:3000',
+      '/api/logout': 'http://localhost:3000',
+      '/api/auth': 'http://localhost:3000',
       '/api/pracownicy': 'http://localhost:3000',
       '/api/maszyny': 'http://localhost:3000',
       '/api/planowanie': 'http://localhost:3000',

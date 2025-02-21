@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import useCrud from "./hooks/UseCrud";
-import MouseHover from './MouseHover';
+import useCrud from "../hooks/UseCrud";
+import MouseHover from "./MouseHover";
 import {
 	IconArrowBigLeftFilled,
 	IconArrowBigRightFilled,
@@ -10,11 +10,24 @@ import "./Planning.css";
 function Planning() {
 	const { data: itemData } = useCrud("/api/pracownicy");
 	const { data: machineData } = useCrud("/api/maszyny");
-	const { data: planningData, createHandle, deleteData, activeButton, setActiveButton, alertText, alertIsVisible, formData, setFormData, cardId, setCardId, endpoint } = useCrud("/api/planowanie");
+	const {
+		data: planningData,
+		createHandle,
+		deleteData,
+		activeButton,
+		setActiveButton,
+		alertText,
+		alertIsVisible,
+		formData,
+		setFormData,
+		cardId,
+		setCardId,
+		endpoint,
+	} = useCrud("/api/planowanie");
 
-	const [buttonText, setButtonText] = useState('Dodaj');
+	const [buttonText, setButtonText] = useState("Dodaj");
 	const [currentDate, setCurrentDate] = useState(new Date());
-	
+
 	const colorPalette = ["#2EA6FC", "#23CE65", "#FCDA51"];
 
 	// Funkcja do generowania 7 kolejnych dni
@@ -47,37 +60,35 @@ function Planning() {
 	}
 
 	const handleChange = (e) => {
-		
 		setFormData((prev) => ({
 			...prev,
-			'planowanie': {
+			planowanie: {
 				...prev.planowanie,
-				[e.target.name]: e.target.value
+				[e.target.name]: e.target.value,
 			},
 		}));
-		
 	};
-	
+
 	const buttonChangeClick = (index) => {
-		setButtonText(index === 0 ? 'Dodaj' : 'Edytuj');
+		setButtonText(index === 0 ? "Dodaj" : "Edytuj");
 		if (activeButton === null || activeButton !== index) {
 			setActiveButton(index);
-			
+
 			setFormData((prev) => ({
 				...prev,
 				planowanie: {
-				  ...prev.planowanie,
+					...prev.planowanie,
 				},
 			}));
 
-			setCardId(null)
+			setCardId(null);
 		}
 	};
 
-	const editInsert = (planId) => {	
-		const selectedPlan = planningData.find(plan => plan._id === planId);
+	const editInsert = (planId) => {
+		const selectedPlan = planningData.find((plan) => plan._id === planId);
 		if (!selectedPlan) return;
-	
+
 		setFormData((prev) => ({
 			...prev,
 			planowanie: {
@@ -153,10 +164,10 @@ function Planning() {
 									{daysToDisplay.map((day, index) => {
 										// Konwertujemy obiekt day na format YYYY-MM-DD (lub Date, zależnie od Twoich potrzeb)
 										const dayString = day.toISOString().split("T")[0];
-										let startString = ''
-										let endString = ''
-										let planningId = ''
-										let planningDesc = ''
+										let startString = "";
+										let endString = "";
+										let planningId = "";
+										let planningDesc = "";
 										// 2. Sprawdzamy, czy w userPlans jest JAKIKOLWIEK wpis, w którym day mieści się
 										//    pomiędzy startDate i endDate
 										const isPlanned = userPlans.some((plan) => {
@@ -168,8 +179,8 @@ function Planning() {
 												.toISOString()
 												.split("T")[0];
 
-											planningId = plan._id
-											planningDesc = plan.description
+											planningId = plan._id;
+											planningDesc = plan.description;
 
 											// Porównanie "YYYY-MM-DD" jako stringów działa poprawnie TYLKO gdy to jest ten sam format,
 											// i jeśli nie uwzględniasz stref czasowych.
@@ -189,12 +200,16 @@ function Planning() {
 														style={{ backgroundColor: userColor }}
 														data={planningId}
 														onClick={() => {
-															setActiveButton(1)
-															buttonChangeClick(1)
-															editInsert(planningId)
+															setActiveButton(1);
+															buttonChangeClick(1);
+															editInsert(planningId);
 														}}
 													>
-														<MouseHover startDate={startString} endDate={endString} description={planningDesc}/>
+														<MouseHover
+															startDate={startString}
+															endDate={endString}
+															description={planningDesc}
+														/>
 													</div>
 												)}
 											</div>
@@ -210,15 +225,25 @@ function Planning() {
 			{/* Panel dodawania/edycji zadań */}
 			<div className='planning-panel'>
 				<button className='panel-task'>Zadanie</button>
-				<button className='new-task' onClick={() => buttonChangeClick(0)}>Dodaj</button>
-				<button className='edit-task'onClick={() => buttonChangeClick(1)}>Edytuj</button>
+				<button
+					className='new-task'
+					onClick={() => buttonChangeClick(0)}
+				>
+					Dodaj
+				</button>
+				<button
+					className='edit-task'
+					onClick={() => buttonChangeClick(1)}
+				>
+					Edytuj
+				</button>
 
 				<form onSubmit={createHandle}>
 					<div className='worker-col'>
 						<p>Pracownik</p>
 						<select
 							name='workerId'
-							value={formData['planowanie'].workerId}
+							value={formData["planowanie"].workerId}
 							onChange={handleChange}
 						>
 							<option>Wybierz</option>
@@ -237,7 +262,7 @@ function Planning() {
 						<p>Rozpoczęcie</p>
 						<input
 							type='date'
-							value={formData['planowanie'].startDate}
+							value={formData["planowanie"].startDate}
 							onChange={handleChange}
 							name='startDate'
 						/>
@@ -247,7 +272,7 @@ function Planning() {
 						<p>Koniec</p>
 						<input
 							type='date'
-							value={formData['planowanie'].endDate}
+							value={formData["planowanie"].endDate}
 							onChange={handleChange}
 							name='endDate'
 						/>
@@ -255,10 +280,12 @@ function Planning() {
 
 					<div className='machine-col'>
 						<p>Maszyna</p>
-						<select name='machineId' value={formData['planowanie'].machineId} onChange={handleChange}>
-							<option>
-								Wybierz
-							</option>
+						<select
+							name='machineId'
+							value={formData["planowanie"].machineId}
+							onChange={handleChange}
+						>
+							<option>Wybierz</option>
 							{machineData.map((item, index) => (
 								<option
 									key={index}
@@ -274,7 +301,7 @@ function Planning() {
 						<p>Opis</p>
 						<textarea
 							name='description'
-							value={formData['planowanie'].description}
+							value={formData["planowanie"].description}
 							onChange={handleChange}
 						></textarea>
 					</div>
@@ -282,7 +309,6 @@ function Planning() {
 					<div className='submit-col'>
 						<button type='submit'>{buttonText}</button>
 					</div>
-
 				</form>
 			</div>
 		</>

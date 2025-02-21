@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import useCrud from "./hooks/UseCrud";
+import useCrud from "../hooks/UseCrud";
 import EditPanel from "./EditPanel/EditPanel";
 import { IconUser, IconCar } from "@tabler/icons-react";
 import "./Machines.css";
@@ -30,7 +30,7 @@ function Machines() {
 			setFormData((prev) => ({
 				...prev,
 				maszyny: {
-				  ...prev.maszyny,
+					...prev.maszyny,
 				},
 			}));
 
@@ -48,7 +48,7 @@ function Machines() {
 		setFormData((prev) => ({
 			...prev,
 			maszyny: {
-			  	...prev.maszyny,
+				...prev.maszyny,
 				name: itemData[i].name,
 				isUsingSince: itemData[i].isUsingSince,
 				capacity: itemData[i].capacity,

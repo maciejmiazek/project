@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Sidebar.css";
 import "@fontsource/poppins";
 import "@fontsource/poppins/600.css";
@@ -14,6 +15,13 @@ import {
 } from "@tabler/icons-react";
 
 function Sidebar() {
+	const navigate = useNavigate();
+
+	const handleLogout = async () => {
+		await axios.post("/api/logout", {})
+		navigate("/");
+	}
+
 	return (
 		<div className='sidebar'>
 			<div className='sidebar-content'>
@@ -72,12 +80,10 @@ function Sidebar() {
 				</nav>
 			</div>
 			<div className='logout'>
-				<Link to='/'>
-					<button className='nav-item'>
-						<IconLogout stroke={2} />
-						Wyloguj
-					</button>
-				</Link>
+				<button className='nav-item' onClick={() => {handleLogout()}}>
+					<IconLogout stroke={2} />
+					Wyloguj
+				</button>
 			</div>
 		</div>
 	);

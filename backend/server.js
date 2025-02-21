@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path'); // Dodaj ten import
 const app = express();
 const cors = require('cors')
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const corsOptions = {
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -21,10 +23,33 @@ const { FinanceModel, FinancePutModel, FinanceAddModel } = require('./models/Fin
 
 app.use(express.json())
 app.use(express.static(path.join(frontendPath)));
+app.use('/api', (req, res, next) => {
+    if (req.path === '/logowanie' || req.path === '/logout' || req.path === '/auth') return next();
+    authMiddleware(req, res, next);
+});
+
+function authMiddleware(req, res, next) {
+
+    const token = req.headers['cookie']?.split('=')[1];
+
+    if (!token) {
+        return res.status(401).json({ message: "Brak tokena" });
+    }
+
+    next();
+}
 
 const db_host = process.env.DB_HOST
 const db_user = process.env.DB_USER
 const db_pass = process.env.DB_PASS
+
+const users = [
+    {
+        id: 1,
+        login: "administrator",
+        password: "$2b$10$X/m32SH9V2gtjyoAaPPA4enPEtP2Y5biqEuGx.tx0hVGO2bsMq4jS",
+    },
+];
 
 mongoose.connect(`mongodb+srv://${db_user}:${db_pass}@cluster0.${db_host}/project`)
     .then(() => console.log('Połączono z bazą danych'))
@@ -72,6 +97,50 @@ app.get('/api/finanse', (req, res) => {
     FinanceModel.find()
         .then(items => res.json(items))
         .catch(err => res.json(err))
+});
+
+function generateToken(user) {
+    return jwt.sign({ id: user.id, login: user.login }, process.env.JWT_SECRET, {
+        expiresIn: "1h", // Token ważny przez 1 godzinę
+    });
+}
+
+app.post("/api/logowanie", async (req, res) => {
+    const { login, pass } = req.body;
+
+    const user = users.find((u) => u.login === login);
+    if (!user) {
+        return res.status(401).json({ message: "Nie znaleziono użytkownika" });
+    }
+
+    const isMatch = await bcrypt.compare(pass.trim(), user.password);
+    if (!isMatch) {
+        return res.status(401).json({ message: "Niepoprawne hasło" });
+    }
+
+    const token = generateToken(user);
+
+    res.cookie("authToken", token, { httpOnly: true, secure: true, sameSite: "Strict" });
+    res.status(200).json({ message: "Zalogowano", token });
+});
+
+app.post("/api/auth", (req, res) => {
+    const token = req.headers['cookie']?.split('=')[1];
+    if (!token) {
+        return res.status(401).json({ message: "Brak tokena" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        res.status(200).json({ message: "Zalogowano", user: decoded });
+    } catch (error) {
+        res.status(401).json({ message: "Niepoprawny token" });
+    }
+})
+
+app.post("/api/logout", (req, res) => {
+    res.clearCookie("authToken");
+    res.json({ message: "Wylogowano" });
 });
 
 app.post('/api/pracownicy', async (req, res) => {
@@ -158,7 +227,7 @@ app.post('/api/finanse', async (req, res) => {
             },
             { new: true }
         )
-     
+
         res.status(200).json({ message: 'Przedmiot zapisany' });
     } catch (error) {
         console.error('Błąd podczas zapisu:', error.message);
@@ -210,7 +279,7 @@ app.put('/api/magazyn/:id', async (req, res) => {
     try {
         const { historyId } = req.body;
         const index = parseInt(historyId, 10);
-        
+
         if (historyId !== undefined && historyId !== null) {
             console.log(historyId);
             const { id } = req.params;
@@ -221,7 +290,7 @@ app.put('/api/magazyn/:id', async (req, res) => {
             if (item.history[index][0] === false) {
                 flag = false
                 num = item.count + item.history[index][1]
-            }else{
+            } else {
                 flag = true
                 num = item.count - item.history[index][1]
             }
@@ -230,7 +299,7 @@ app.put('/api/magazyn/:id', async (req, res) => {
                 { _id: id },
                 { $unset: { [`history.${index}`]: 1 } }, // Ustawia history[2] na null
             );
-            
+
             await WarehouseModel.updateOne(
                 { _id: id },
                 { $pull: { history: null } },
@@ -240,7 +309,7 @@ app.put('/api/magazyn/:id', async (req, res) => {
                 { _id: id },
                 { $inc: { count: flag === false ? item.history[index][1] : -item.history[index][1] } },
             );
-            
+
             return res.status(200).json({ message: 'Element historii usunięty' });
 
         } else {
