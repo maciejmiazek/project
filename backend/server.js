@@ -218,25 +218,40 @@ app.post('/api/finanse', async (req, res) => {
     try {
         console.log(req.body);
 
-        const item = await FinanceModel.findById('677edc054d7fc3791077dff0');
+        const { category, name, count, isCost, month, year } = req.body;
+        numMonth = Number(month);
+        numYear = Number(year);
 
-        await FinanceModel.findByIdAndUpdate(
-            item._id,
-            {
-                $push: { costs: [req.body.category, req.body.name, req.body.count] },
-            },
-            { new: true }
-        )
+        let financeEntry = await FinanceModel.findOne({ "dateId.month": Number(numMonth), "dateId.year": numYear });
 
-        res.status(200).json({ message: 'Przedmiot zapisany' });
+        if (!financeEntry) {
+            // Jeśli nie ma wpisu dla danego miesiąca, utwórz nowy
+            financeEntry = new FinanceModel({
+                balance: 0,
+                costs: [],
+                dateId: { month: numMonth, year: numYear },
+                gains: []
+            });
+        }
+
+        // Dodaj nowy koszt lub zysk
+        if (isCost === 1) {
+            financeEntry.costs.push([category, name, Number(count)]);
+        } else {
+            financeEntry.gains.push([category, name, Number(count)]);
+        }
+
+        await financeEntry.save();
+
+        res.status(200).json({ message: 'Dane zapisane', data: financeEntry });
     } catch (error) {
         console.error('Błąd podczas zapisu:', error.message);
-        // Obsługa błędów walidacji
+        
         if (error.name === 'ValidationError') {
-            const errors = Object.values(error.errors).map((err) => err.message);
+            const errors = Object.values(error.errors).map(err => err.message);
             return res.status(400).json({ message: 'Błąd walidacji', errors });
         }
-        // Inne błędy
+
         res.status(500).json({ message: 'Błąd serwera' });
     }
 });

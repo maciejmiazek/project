@@ -49,6 +49,9 @@ function useCrud(endpoint) {
       name: '',
       category: 'Maszyny',
       count: 0,
+      isCost: 1,
+      month: 2,
+      year: 2025,
     },
 	});
 
@@ -65,9 +68,7 @@ function useCrud(endpoint) {
   const createHandle = async (e) => {
     e.preventDefault()
     if (endpoint === '/api/finanse') {
-      if (activeButton === 0) {
-        createData()
-      }
+      createData()
       return
     }
     if (endpoint === '/api/magazyn') {
@@ -86,7 +87,7 @@ function useCrud(endpoint) {
   }
 
   const createData = async () => {
-    
+
 			try {
 				const response = await axios.post(`${endpoint}`, formData[endpoint.split('/')[2]]);
 		  

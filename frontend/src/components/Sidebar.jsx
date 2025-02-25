@@ -29,7 +29,7 @@ function Sidebar() {
 					<div className='logo'>
 						<IconUser stroke={2} />
 					</div>
-					<div className='name'>Maciej</div>
+					<div className='name'>Administrator</div>
 				</div>
 				<nav className='nav-menu'>
 					<NavLink
